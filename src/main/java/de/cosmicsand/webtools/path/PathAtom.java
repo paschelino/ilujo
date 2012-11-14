@@ -7,7 +7,7 @@ import static java.util.regex.Pattern.compile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PathAtom {
+public class PathAtom implements Comparable<PathAtom> {
 
     protected static final Pattern PATH_ATOM_PATTERN = compile("\\s*/?([^/\\s]+)/?\\s*");
 
@@ -41,6 +41,23 @@ public class PathAtom {
 
     public String getOuterName() {
         return format("/%s", innerName);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof PathAtom)
+            return innerName.equals(((PathAtom) obj).innerName);
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return innerName.hashCode();
+    }
+
+    @Override
+    public int compareTo(PathAtom other) {
+        return this.innerName.compareTo(other.innerName);
     }
 
 }
