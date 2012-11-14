@@ -4,7 +4,6 @@ import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.regex.Pattern.compile;
 import static org.apache.commons.lang.StringUtils.isEmpty;
-import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,12 +51,6 @@ public class Path implements Comparable<Path> {
 
     @Override
     public int compareTo(Path other) {
-        if (isEmpty(rawPath) && isEmpty(other.rawPath))
-            return 0;
-        else if (isNotEmpty(rawPath) && isEmpty(other.rawPath))
-            return 1;
-        else if (isEmpty(rawPath) && isNotEmpty(other.rawPath))
-            return -1;
         return rawPath.compareTo(other.rawPath);
     }
 
