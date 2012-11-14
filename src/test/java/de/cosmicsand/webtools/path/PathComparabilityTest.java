@@ -9,17 +9,17 @@ public class PathComparabilityTest extends ComparabilityTestCase {
     }
 
     @Override
-    protected Comparable<?> createEqualInstance() throws Exception {
+    protected Comparable<Path> createEqualInstance() throws Exception {
         return new Path("/b");
     }
 
     @Override
-    protected Comparable<?> createGreaterInstance() throws Exception {
+    protected Comparable<Path> createGreaterInstance() throws Exception {
         return new Path("/c");
     }
 
     @Override
-    protected Comparable<?> createLessInstance() throws Exception {
+    protected Comparable<Path> createLessInstance() throws Exception {
         return new Path("/a");
     }
 
