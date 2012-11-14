@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class Path implements Comparable<Path> {
 
-    public static final Pattern SYNTAX_PATTERN = compile("(/[^/]*)*");
+    protected static final Pattern SYNTAX_PATTERN = compile("(/[^/]*)*");
     public static final Path EMPTY_PATH = new Path();
 
     private static final String ERR_MESS_SYNTAX_PATTERN = "If not empty the given path is required to follow the pattern '/your/path'. Current value: '%s'";
