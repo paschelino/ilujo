@@ -36,7 +36,7 @@ public class PathAtom {
     }
 
     public Integer innerLength() {
-        return valueOf(getInnerName().length());
+        return valueOf(innerName.length());
     }
 
     public String getOuterName() {
