@@ -3,6 +3,7 @@ package de.cosmicsand.webtools.path;
 import static java.lang.Integer.valueOf;
 import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
+import static org.apache.commons.lang.StringUtils.defaultString;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,7 +17,7 @@ public class PathAtom implements Comparable<PathAtom> {
     private final String innerName;
 
     public PathAtom(String rawPathAtom) {
-        final Matcher matcher = PATH_ATOM_PATTERN.matcher(rawPathAtom == null ? "" : rawPathAtom);
+        final Matcher matcher = PATH_ATOM_PATTERN.matcher(defaultString(rawPathAtom));
         if (!matcher.matches())
             throw new URLPathException(SYNTAX_ERR_MESS);
         this.innerName = matcher.group(1);
