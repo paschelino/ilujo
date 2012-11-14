@@ -3,9 +3,10 @@ apply plugin: 'eclipse'
 
 sourceCompatibility = 1.6
 version = '0.0.2-SNAPSHOT'
+title = 'ilujo'
 jar {
     manifest {
-        attributes 'Implementation-Title': 'Gradle Quickstart', 'Implementation-Version': version
+        attributes 'Implementation-Title': title, 'Implementation-Version': version
     }
 }
 
@@ -16,6 +17,7 @@ repositories {
 dependencies {
     compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
     testCompile group: 'junit', name: 'junit', version: '4.+'
+    //TODO add junit 3.8.1 as dependency
     testCompile group: 'junit-addons', name: 'junit-addons', version: '1.4'
     compile group: 'commons-lang', name: 'commons-lang', version: '1.0'
 }
