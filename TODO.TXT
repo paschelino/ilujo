@@ -1,0 +1,32 @@
+TODO
+====
+
+algebraic path operations
+-------------------------
+* append
+* merge
+* subpath
+* split
+* transform with transformation rule
+* remove
+* consider path multiplications as kind
+  of linear algebra operations in order to provide routing matrixes
+* mapTo
+* mapFrom
+* mapToAndFrom
+* path mapping observer
+
+URL encoding
+------------
+* interface URLEncodable
+* decide between eager and lazy encoding
+
+static factory dsl
+------------------
+* path with string
+* path with atoms
+* path with paths
+* decide if other combinations are required
+* atom with string
+* atom with atom
+* atom list with atoms
