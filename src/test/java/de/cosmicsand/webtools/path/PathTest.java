@@ -70,4 +70,63 @@ public class PathTest {
         assertThat(path, is(new Path("/simple")));
         assertThat(path.getAtoms(), is(asList(pathAtom)));
     }
+
+    @Test
+    public void whenCreatedWithSeveralPathAtom_then_theyFormThePath() {
+        PathAtom pathAtom1 = new PathAtom("/atom1");
+        PathAtom pathAtom2 = new PathAtom("/atom2");
+        Path path = new Path(pathAtom1, pathAtom2);
+        assertThat(path, is(new Path("/atom1/atom2")));
+        assertThat(path.getAtoms(), is(asList(pathAtom1, pathAtom2)));
+    }
+
+    @Test
+    public void whenCreatedWithANullPath_then_itIsThatPath() {
+        assertThat(new Path(new Path()), is(new Path()));
+    }
+
+    @Test
+    public void whenCreatedWithNullAsPath_then_itTreatsItAsNullPath() {
+        assertThat(new Path((Path) null), is(new Path()));
+    }
+
+    @Test
+    public void whenCreatedWithANotNullPath_then_itIsThatPath() {
+        assertThat(new Path(new Path("/notnull")), is(new Path("/notnull")));
+    }
+
+    @Test
+    public void givenIAddTwoNullPaths_then_itGivesANullPath() {
+        Path path = new Path();
+        path.append(new Path());
+        assertThat(path, is(Path.ROOT));
+    }
+
+    @Test
+    public void givenIAddANotNullPathToANullPath_then_itGivesTheNotNullPath() {
+        Path path = new Path();
+        path.getAtoms(); // trigger lazy initialization
+        path.append(new Path("/notnull"));
+        assertThat(path, is(new Path("/notnull")));
+        assertThat(path.getAtoms(), is(asList(new PathAtom("notnull"))));
+    }
+
+    @Test
+    public void givenIAddANullPathToANotNullPath_then_itGivesTheNotNullPath() {
+        Path path = new Path("/notnull");
+        path.getAtoms(); // trigger lazy initialization
+        path.append(new Path());
+        assertThat(path, is(new Path("/notnull")));
+        assertThat(path.getAtoms(), is(asList(new PathAtom("notnull"))));
+    }
+
+    @Test
+    public void givenIAppendTwoComplexPaths_then_itGivesTheSyntacticallyCorrectSumOfItsParts() {
+        Path path = new Path("/one/two");
+        path.getAtoms(); // trigger lazy initialization
+        path.append(new Path("/three/four"));
+        assertThat(path, is(new Path("/one/two/three/four")));
+        assertThat(path.getAtoms(),
+                is(asList(new PathAtom("/one"), new PathAtom("/two"), new PathAtom("/three"), new PathAtom("/four"))));
+    }
 }
