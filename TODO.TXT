@@ -3,7 +3,6 @@ TODO
 
 algebraic path operations
 -------------------------
-* append
 * merge
 * subpath
 * split
@@ -30,3 +29,8 @@ static factory dsl
 * atom with string
 * atom with atom
 * atom list with atoms
+
+deployment
+----------
+* add build task for publishing in maven repositories
+* improve readme
