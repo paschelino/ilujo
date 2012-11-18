@@ -63,4 +63,11 @@ public class PathTest {
                 )));
     }
 
+    @Test
+    public void whenCreatedWithAPathAtom_then_itFormsThePath() {
+        PathAtom pathAtom = new PathAtom("/simple");
+        Path path = new Path(pathAtom);
+        assertThat(path, is(new Path("/simple")));
+        assertThat(path.getAtoms(), is(asList(pathAtom)));
+    }
 }

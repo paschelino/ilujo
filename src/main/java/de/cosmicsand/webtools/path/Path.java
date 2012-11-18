@@ -32,6 +32,10 @@ public class Path implements Comparable<Path> {
         this("");
     }
 
+    public Path(PathAtom pathAtom) {
+        rawPath = pathAtom.getOuterName();
+    }
+
     @Override
     public String toString() {
         return rawPath;
