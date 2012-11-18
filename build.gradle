@@ -17,7 +17,7 @@ repositories {
 dependencies {
     compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
     testCompile group: 'junit', name: 'junit', version: '4.+'
-    //TODO add junit 3.8.1 as dependency
+    testCompile group: 'junit', name: 'junit', version: '3.8.1'
     testCompile group: 'junit-addons', name: 'junit-addons', version: '1.4'
     compile group: 'commons-lang', name: 'commons-lang', version: '1.0'
 }
