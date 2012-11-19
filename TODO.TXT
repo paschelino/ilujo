@@ -5,6 +5,7 @@ algebraic path operations
 -------------------------
 * merge
 * intersections
+* concatToNew in contrast to append
 * subtractions
 * subpath
 * split
