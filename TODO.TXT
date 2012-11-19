@@ -21,6 +21,7 @@ algebraic path operations
 interoperability
 -------------------------------
 * implement serializable
+* provide constant paths, i.e. unmodifiable paths
 
 URL encoding
 ------------
