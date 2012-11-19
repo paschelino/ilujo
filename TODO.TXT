@@ -16,6 +16,10 @@ algebraic path operations
 * path mapping observer
 * interface toPath for Paths and PathAtoms
 
+interoperability
+-------------------------------
+* implement serializable
+
 URL encoding
 ------------
 * interface URLEncodable
