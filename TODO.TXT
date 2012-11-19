@@ -4,6 +4,8 @@ TODO
 algebraic path operations
 -------------------------
 * merge
+* intersections
+* subtractions
 * subpath
 * split
 * transform with transformation rule
