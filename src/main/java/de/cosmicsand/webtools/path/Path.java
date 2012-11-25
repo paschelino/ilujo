@@ -34,11 +34,15 @@ public class Path implements Comparable<Path> {
     }
 
     public Path(PathAtom... pathAtoms) {
+        rawPath = buildRawPath(pathAtoms);
+        atoms = asList(pathAtoms);
+    }
+
+    private String buildRawPath(PathAtom... pathAtoms) {
         StringBuilder pathBuilder = new StringBuilder();
         for (PathAtom atom : pathAtoms)
             pathBuilder.append(atom.getOuterName());
-        rawPath = pathBuilder.toString();
-        atoms = asList(pathAtoms);
+        return pathBuilder.toString();
     }
 
     public Path(Path path) {
@@ -50,24 +54,24 @@ public class Path implements Comparable<Path> {
 
     @Override
     public String toString() {
-        return rawPath.toString();
+        return rawPath;
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Path)
-            return rawPath.toString().equals(((Path) obj).rawPath.toString());
+            return rawPath.equals(((Path) obj).rawPath);
         return false;
     }
 
     @Override
     public int hashCode() {
-        return rawPath.toString().hashCode();
+        return rawPath.hashCode();
     }
 
     @Override
     public int compareTo(Path other) {
-        return rawPath.toString().compareTo(other.rawPath.toString());
+        return rawPath.compareTo(other.rawPath);
     }
 
     public List<PathAtom> getAtoms() {
