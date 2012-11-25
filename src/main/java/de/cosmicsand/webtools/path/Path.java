@@ -90,9 +90,8 @@ public class Path implements Comparable<Path> {
     }
 
     public Path add(Path path) {
-        Path helperPath = new Path(path);
         StringBuilder resultPath = new StringBuilder(this.rawPath);
-        resultPath.append(helperPath.rawPath);
+        resultPath.append(new Path(path).rawPath);
         cleanupObsoleteSlashes(resultPath);
         return new Path(resultPath.toString());
     }
