@@ -1,9 +1,12 @@
 package de.cosmicsand.webtools.path;
 
 import static java.lang.Math.random;
+import static java.lang.reflect.Modifier.isFinal;
+import static java.lang.reflect.Modifier.isPublic;
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -73,6 +76,13 @@ public class PathConstructionTest {
     @Test
     public void whenCreatedWithANotNullPath_then_itIsThatPath() {
         assertThat(new Path(new Path("/notnull")), is(new Path("/notnull")));
+    }
+
+    @Test
+    public void theRawPathIsPublicAndFinal() throws SecurityException, NoSuchFieldException {
+        int modifiers = Path.class.getDeclaredField("rawPath").getModifiers();
+        assertTrue(isFinal(modifiers));
+        assertTrue(isPublic(modifiers));
     }
 
 }

@@ -19,12 +19,12 @@ public class Path implements Comparable<Path> {
 
     private static final String ERR_MESS_SYNTAX_PATTERN = "If not empty the given path is required to follow the pattern '/your/path'. Current value: '%s'";
 
-    private StringBuffer rawPath;
+    public final String rawPath;
 
     private List<PathAtom> atoms;
 
     public Path(String rawPath) {
-        this.rawPath = new StringBuffer(isEmpty(rawPath) ? "/" : rawPath);
+        this.rawPath = isEmpty(rawPath) ? "/" : rawPath;
         if (!SYNTAX_PATTERN.matcher(this.rawPath).matches())
             throw new URLPathException(format(ERR_MESS_SYNTAX_PATTERN, rawPath));
     }
@@ -34,10 +34,10 @@ public class Path implements Comparable<Path> {
     }
 
     public Path(PathAtom... pathAtoms) {
-        StringBuffer pathBuilder = new StringBuffer();
+        StringBuilder pathBuilder = new StringBuilder();
         for (PathAtom atom : pathAtoms)
             pathBuilder.append(atom.getOuterName());
-        rawPath = pathBuilder;
+        rawPath = pathBuilder.toString();
         atoms = asList(pathAtoms);
     }
 
@@ -85,24 +85,22 @@ public class Path implements Comparable<Path> {
             atoms.add(atoms.size(), new PathAtom(rawAtom));
     }
 
-    public Path append(Path path) {
+    public Path add(Path path) {
         Path helperPath = new Path(path);
-        this.rawPath.append(helperPath.rawPath);
-        cleanupObsoleteSlashes();
-        this.atoms = null;
-        return this;
+        StringBuilder resultPath = new StringBuilder(this.rawPath);
+        resultPath.append(helperPath.rawPath);
+        cleanupObsoleteSlashes(resultPath);
+        return new Path(resultPath.toString());
     }
 
-    private void cleanupObsoleteSlashes() {
-        if (this.rawPath.charAt(this.rawPath.length() - 1) == '/')
-            this.rawPath.replace(this.rawPath.length() - 1, this.rawPath.length(), "");
-        if (this.rawPath.length() > 1 && this.rawPath.charAt(1) == '/')
-            this.rawPath.replace(0, 1, "");
+    private void cleanupObsoleteSlashes(StringBuilder dirtyPath) {
+        if (dirtyPath.length() > 1 && dirtyPath.charAt(1) == '/')
+            dirtyPath.replace(0, 1, "");
     }
 
     public Path merge(Path path) {
         if (!this.equals(path))
-            this.append(path);
+            this.add(path);
         return this;
     }
 }
