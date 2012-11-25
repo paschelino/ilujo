@@ -5,7 +5,6 @@ algebraic path operations
 -------------------------
 * merge
 * intersections
-* concatToNew in contrast to append
 * subtractions
 * subpath
 * split
@@ -22,7 +21,6 @@ algebraic path operations
 interoperability
 -------------------------------
 * implement serializable
-* provide constant paths, i.e. unmodifiable paths
 
 URL encoding
 ------------
