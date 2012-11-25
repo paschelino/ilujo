@@ -5,29 +5,14 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-import java.util.Collections;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class PathTest {
-
-    private static final String WRONG_PATH_START_WITH_RANDOM = "wrongpathstartwithrandompart" + random();
+public class PathConstructionTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-
-    @Test
-    public void whenCreatedWithEmptyConstructorInformation_then_itTransformsToRoot() {
-        assertThat(new Path().toString(), is("/"));
-        assertThat(new Path((String) null).toString(), is("/"));
-        assertThat(new Path("").toString(), is("/"));
-    }
-
-    @Test
-    public void itProvidesARootPathObject() {
-        assertThat(Path.ROOT, is(new Path()));
-    }
+    private static final String WRONG_PATH_START_WITH_RANDOM = "wrongpathstartwithrandompart" + random();
 
     @Test
     public void whenCreatedWithASlash_then_itTransformsToASlash() {
@@ -38,13 +23,8 @@ public class PathTest {
     public void whenNotRootAndNotStartingWithASlash_then_throwAURLPathException() {
         thrown.expect(URLPathException.class);
         thrown.expectMessage("If not empty the given path is required to follow the pattern '/your/path'. Current value: '"
-                + WRONG_PATH_START_WITH_RANDOM + "'");
-        new Path(WRONG_PATH_START_WITH_RANDOM);
-    }
-
-    @Test
-    public void whenItIsTheRoot_then_thereAreNoPathAtoms() {
-        assertThat(new Path().getAtoms(), is(Collections.<PathAtom> emptyList()));
+                + PathConstructionTest.WRONG_PATH_START_WITH_RANDOM + "'");
+        new Path(PathConstructionTest.WRONG_PATH_START_WITH_RANDOM);
     }
 
     @Test
@@ -95,38 +75,4 @@ public class PathTest {
         assertThat(new Path(new Path("/notnull")), is(new Path("/notnull")));
     }
 
-    @Test
-    public void givenIAddTwoNullPaths_then_itGivesANullPath() {
-        Path path = new Path();
-        path.append(new Path());
-        assertThat(path, is(Path.ROOT));
-    }
-
-    @Test
-    public void givenIAddANotNullPathToANullPath_then_itGivesTheNotNullPath() {
-        Path path = new Path();
-        path.getAtoms(); // trigger lazy initialization
-        path.append(new Path("/notnull"));
-        assertThat(path, is(new Path("/notnull")));
-        assertThat(path.getAtoms(), is(asList(new PathAtom("notnull"))));
-    }
-
-    @Test
-    public void givenIAddANullPathToANotNullPath_then_itGivesTheNotNullPath() {
-        Path path = new Path("/notnull");
-        path.getAtoms(); // trigger lazy initialization
-        path.append(new Path());
-        assertThat(path, is(new Path("/notnull")));
-        assertThat(path.getAtoms(), is(asList(new PathAtom("notnull"))));
-    }
-
-    @Test
-    public void givenIAppendTwoComplexPaths_then_itGivesTheSyntacticallyCorrectSumOfItsParts() {
-        Path path = new Path("/one/two");
-        path.getAtoms(); // trigger lazy initialization
-        path.append(new Path("/three/four"));
-        assertThat(path, is(new Path("/one/two/three/four")));
-        assertThat(path.getAtoms(),
-                is(asList(new PathAtom("/one"), new PathAtom("/two"), new PathAtom("/three"), new PathAtom("/four"))));
-    }
 }

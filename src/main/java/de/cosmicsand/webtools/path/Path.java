@@ -99,4 +99,10 @@ public class Path implements Comparable<Path> {
         if (this.rawPath.length() > 1 && this.rawPath.charAt(1) == '/')
             this.rawPath.replace(0, 1, "");
     }
+
+    public Path merge(Path path) {
+        if (!this.equals(path))
+            this.append(path);
+        return this;
+    }
 }
