@@ -1,5 +1,6 @@
 package de.cosmicsand.webtools.path;
 
+import static java.lang.Integer.valueOf;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -7,6 +8,7 @@ import static java.util.regex.Pattern.compile;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -22,6 +24,8 @@ public class Path implements Comparable<Path> {
     public final String rawPath;
 
     private List<PathAtom> atoms;
+
+    protected static final String ERR_MESS_PATH_ATOMS_INDEX_OUT_OF_BOUNDS = "The requested path atom %s index %s exceeds the atom list's boundaries. It contains %s items.";
 
     public Path(String rawPath) {
         this.rawPath = isEmpty(rawPath) ? "/" : rawPath;
@@ -42,6 +46,8 @@ public class Path implements Comparable<Path> {
         StringBuilder pathBuilder = new StringBuilder();
         for (PathAtom atom : pathAtoms)
             pathBuilder.append(atom.getOuterName());
+        if (pathBuilder.length() == 0)
+            return ROOT.rawPath;
         return pathBuilder.toString();
     }
 
@@ -50,6 +56,11 @@ public class Path implements Comparable<Path> {
             rawPath = ROOT.rawPath;
         else
             rawPath = path.rawPath;
+    }
+
+    public Path(List<PathAtom> emptyList) {
+        rawPath = buildRawPath(emptyList.toArray(new PathAtom[] {}));
+        atoms = emptyList;
     }
 
     @Override
@@ -83,27 +94,125 @@ public class Path implements Comparable<Path> {
     }
 
     private void extractAtoms() {
-        atoms = new ArrayList<PathAtom>();
+        List<PathAtom> atomsHelper = new ArrayList<PathAtom>();
         String[] split = rawPath.substring(1).split("/");
         for (String rawAtom : split)
-            atoms.add(atoms.size(), new PathAtom(rawAtom));
+            atomsHelper.add(atomsHelper.size(), new PathAtom(rawAtom));
+        atoms = Collections.unmodifiableList(atomsHelper);
     }
 
     public Path add(Path path) {
-        StringBuilder resultPath = new StringBuilder(this.rawPath);
-        resultPath.append(new Path(path).rawPath);
-        cleanupObsoleteSlashes(resultPath);
-        return new Path(resultPath.toString());
+        StringBuilder resultPathBuilder = new StringBuilder(this.rawPath);
+        resultPathBuilder.append(new Path(path).rawPath);
+        cleanupObsoleteSlashes(resultPathBuilder);
+        return new Path(resultPathBuilder.toString());
     }
 
-    private void cleanupObsoleteSlashes(StringBuilder dirtyPath) {
-        if (dirtyPath.length() > 1 && dirtyPath.charAt(1) == '/')
-            dirtyPath.replace(0, 1, "");
+    private void cleanupObsoleteSlashes(StringBuilder dirtyPathBuilder) {
+        if (dirtyPathBuilder.length() < 2)
+            return;
+        if (dirtyPathBuilder.charAt(1) == '/')
+            deleteCharAt(dirtyPathBuilder, 0);
+        if (dirtyPathBuilder.charAt(dirtyPathBuilder.length() - 1) == '/')
+            deleteCharAt(dirtyPathBuilder, dirtyPathBuilder.length() - 1);
+    }
+
+    private void deleteCharAt(StringBuilder dirtyPathBuilder, int charPosition) {
+        dirtyPathBuilder.replace(charPosition, charPosition + 1, "");
     }
 
     public Path merge(Path path) {
+        Path resultPath = this;
         if (!this.equals(path))
-            this.add(path);
+            resultPath = this.add(path);
+        return resultPath;
+    }
+
+    public Path intersection(Path otherPath) {
+        if (ROOT.equals(otherPath))
+            return ROOT;
+        if (this.equals(otherPath))
+            return this;
+        if (!this.equals(otherPath))
+            return buildIntersection(otherPath);
         return this;
     }
+
+    private Path buildIntersection(Path otherPath) {
+        PathAtom firstAtom = otherPath.getAtoms().get(0);
+        Path subpath = otherPath.getSubpath(0, this.getPathAtomCount() - this.indexOf(firstAtom));
+        if (this.contains(subpath))
+            return subpath;
+        return ROOT;
+    }
+
+    public Boolean contains(Path other) {
+        List<PathAtom> othersAtoms = new Path(other).getAtoms();
+        if (othersAtoms.size() > 0)
+            return checkContainmentForNotNullPath(othersAtoms, this.indexOf(othersAtoms.get(0)));
+        return Boolean.TRUE;
+    }
+
+    private Boolean checkContainmentForNotNullPath(List<PathAtom> othersAtoms, Integer othersFirstAtomIndex) {
+        Boolean contained = isProbablyInside(othersAtoms, othersFirstAtomIndex);
+        for (int thisIndex = othersFirstAtomIndex + 1, othersIndex = 1; contained && thisIndex < this.getAtoms().size()
+                && othersIndex < othersAtoms.size(); thisIndex++, othersIndex++)
+            contained = this.getAtoms().get(thisIndex).equals(othersAtoms.get(othersIndex));
+        return contained;
+    }
+
+    private Boolean isProbablyInside(List<PathAtom> othersAtoms, Integer othersFirstAtomIndex) {
+        return !(othersFirstAtomIndex.equals(valueOf(-1)) || (this.getAtoms().size() - othersFirstAtomIndex < othersAtoms
+                .size()));
+    }
+
+    public Boolean containsAtom(PathAtom pathAtom) {
+        return !this.indexOf(pathAtom).equals(valueOf(-1));
+    }
+
+    public Integer indexOf(PathAtom pathAtom) {
+        return valueOf(this.getAtoms().indexOf(pathAtom));
+    }
+
+    public Integer getPathAtomCount() {
+        return this.getAtoms().size();
+    }
+
+    public Path getSubpath(Integer beginIndex, Integer endIndex) {
+        checkIndexBounds(beginIndex, endIndex);
+        return buildSubpath(beginIndex, endIndex);
+    }
+
+    private void checkIndexBounds(Integer beginIndex, Integer endIndex) {
+        if (beginIndex < 0 || beginIndex >= getPathAtomCount())
+            throw new PathAtomIndexOutOfBoundsException(format(ERR_MESS_PATH_ATOMS_INDEX_OUT_OF_BOUNDS, "begin",
+                    beginIndex, (this.getPathAtomCount() - 1)));
+        if (endIndex < 0 || endIndex > getPathAtomCount())
+            throw new PathAtomIndexOutOfBoundsException(format(ERR_MESS_PATH_ATOMS_INDEX_OUT_OF_BOUNDS, "end",
+                    endIndex, this.getPathAtomCount()));
+    }
+
+    private Path buildSubpath(Integer beginIndex, Integer endIndex) {
+        if (beginIndex.equals(endIndex))
+            return ROOT;
+        ArrayList<PathAtom> subpath = new ArrayList<PathAtom>();
+        for (int indexCursor = beginIndex; indexCursor < endIndex; indexCursor++)
+            subpath.add(this.getAtoms().get(indexCursor));
+        return new Path(subpath.toArray(new PathAtom[] {}));
+    }
+
+    public Path remove(Path path) {
+        if (this.contains(path) && !this.equals(path) && !ROOT.equals(path)) {
+            int beginIndex = this.indexOf(path.getAtoms().get(0));
+            int endIndex = beginIndex + path.getPathAtomCount();
+            ArrayList<PathAtom> newPath = new ArrayList<PathAtom>();
+            for (int i = 0; i < beginIndex; i++)
+                newPath.add(this.getAtoms().get(i));
+            for (int i = endIndex; i < this.getPathAtomCount(); i++)
+                newPath.add(this.getAtoms().get(i));
+            return new Path(newPath.toArray(new PathAtom[] {}));
+        }
+        return this;
+    }
+
 }

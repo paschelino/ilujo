@@ -1,5 +1,7 @@
 package de.cosmicsand.webtools.path;
 
+import static de.cosmicsand.webtools.path.test.PathMatcher.root;
+import static de.cosmicsand.webtools.path.test.PathMatcher.theIdenticalPathAs;
 import static java.lang.Math.random;
 import static java.lang.reflect.Modifier.isFinal;
 import static java.lang.reflect.Modifier.isPublic;
@@ -7,6 +9,8 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Collections;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,11 +43,8 @@ public class PathConstructionTest {
     @Test
     public void whenCreatedWithSomePathAtoms_then_itKnowsThem() {
         String rawAtom1 = "/one", rawAtom2 = "/two", rawAtom3 = "/three";
-        assertThat(new Path(rawAtom1 + rawAtom2 + rawAtom3).getAtoms(), is(asList(
-                new PathAtom(rawAtom1),
-                new PathAtom(rawAtom2),
-                new PathAtom(rawAtom3)
-                )));
+        assertThat(new Path(rawAtom1 + rawAtom2 + rawAtom3).getAtoms(),
+                is(asList(new PathAtom(rawAtom1), new PathAtom(rawAtom2), new PathAtom(rawAtom3))));
     }
 
     @Test
@@ -79,10 +80,30 @@ public class PathConstructionTest {
     }
 
     @Test
+    public void whenCreatedWithAnEmptyPathAtomList_then_itIsTheRootPath() {
+        assertThat(new Path(Collections.<PathAtom> emptyList()), is(theIdenticalPathAs(root())));
+    }
+
+    @Test
+    public void whenCreatedWithANonEmptyPathAtomList_then_itFormsTheRelatedPath() {
+        assertThat(new Path(asList(new PathAtom("/one"), new PathAtom("/two"))), is(theIdenticalPathAs("/one/two")));
+    }
+
+    @Test
     public void theRawPathIsPublicAndFinal() throws SecurityException, NoSuchFieldException {
         int modifiers = Path.class.getDeclaredField("rawPath").getModifiers();
         assertTrue(isFinal(modifiers));
         assertTrue(isPublic(modifiers));
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void thePathAtomsListOfAnEmptyPathIsRequiredNotToBeModifiable() {
+        new Path().getAtoms().add(new PathAtom("/toomuch"));
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void thePathAtomsListOfAnNonEmptyPathIsRequiredNotToBeModifiable() {
+        new Path("/notemptyt").getAtoms().add(new PathAtom("/toomuch"));
     }
 
 }

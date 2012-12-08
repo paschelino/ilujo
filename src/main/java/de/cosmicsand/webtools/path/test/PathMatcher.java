@@ -17,7 +17,7 @@ public class PathMatcher extends TypeSafeMatcher<Path> {
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("the identical path as " + expectedPath.rawPath);
+        description.appendText("the identical path as <" + expectedPath.rawPath + ">");
     }
 
     @Override
@@ -33,6 +33,16 @@ public class PathMatcher extends TypeSafeMatcher<Path> {
     @Factory
     public static <T> Matcher<Path> theIdenticalPathAs(String expectedPath) {
         return new PathMatcher(new Path(expectedPath));
+    }
+
+    @Factory
+    public static <T> Matcher<Path> theIdenticalPathAs(Matcher<Path> pathMatcher) {
+        return pathMatcher;
+    }
+
+    @Factory
+    public static <T> Matcher<Path> root() {
+        return new PathMatcher(Path.ROOT);
     }
 
 }
