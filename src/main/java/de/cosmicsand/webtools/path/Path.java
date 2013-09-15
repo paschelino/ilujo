@@ -7,9 +7,7 @@ import static java.util.Collections.emptyList;
 import static java.util.regex.Pattern.compile;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Path implements Comparable<Path> {
@@ -43,6 +41,10 @@ public class Path implements Comparable<Path> {
     }
 
     private String buildRawPath(PathAtom... pathAtoms) {
+        return buildRawPath(Arrays.asList(pathAtoms));
+    }
+
+    private String buildRawPath(Collection<PathAtom> pathAtoms) {
         StringBuilder pathBuilder = new StringBuilder();
         for (PathAtom atom : pathAtoms)
             pathBuilder.append(atom.getOuterName());
@@ -58,9 +60,10 @@ public class Path implements Comparable<Path> {
             rawPath = path.rawPath;
     }
 
-    public Path(List<PathAtom> emptyList) {
-        rawPath = buildRawPath(emptyList.toArray(new PathAtom[] {}));
-        atoms = emptyList;
+
+    public Path(Collection<PathAtom> emptyList) {
+        rawPath = buildRawPath(emptyList);
+        atoms = new ArrayList<>(emptyList);
     }
 
     @Override
