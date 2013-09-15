@@ -23,7 +23,7 @@ public class Path implements Comparable<Path> {
 
     private List<PathAtom> atoms;
 
-    protected static final String ERR_MESS_PATH_ATOMS_INDEX_OUT_OF_BOUNDS = "The requested path atom %s index %s exceeds the atom list's boundaries. It contains %s items.";
+    protected static final String ERR_MESS_PATH_ATOMS_INDEX_OUT_OF_BOUNDS = "The requested path atom %s index %s exceeds the atom list's boundaries. Smallest index %s. Largest index %s.";
 
     public Path(String rawPath) {
         this.rawPath = isEmpty(rawPath) ? "/" : rawPath;
@@ -188,7 +188,7 @@ public class Path implements Comparable<Path> {
 
     private void checkIndexBounds(Integer beginIndex, Integer endIndex) {
         if (beginIndex < 0 || beginIndex >= getPathAtomCount()) {
-            throwIndexError(beginIndex, "begin", this.getPathAtomCount() - 1);
+            throwIndexError(beginIndex, "begin", this.getPathAtomCount());
         }
         if (endIndex < 0 || endIndex > getPathAtomCount())
             throwIndexError(endIndex, "end", this.getPathAtomCount());
@@ -196,7 +196,7 @@ public class Path implements Comparable<Path> {
 
     private void throwIndexError(Integer index, String errorType, int elementCount) {
         throw new PathAtomIndexOutOfBoundsException(format(ERR_MESS_PATH_ATOMS_INDEX_OUT_OF_BOUNDS, errorType,
-                index, elementCount));
+                index, 0, elementCount - 1));
     }
 
     private Path buildSubpath(Integer beginIndex, Integer endIndex) {
