@@ -192,7 +192,7 @@ public class PathOperationsTest {
         Path path = new Path("/one/two");
         thrown.expect(PathAtomIndexOutOfBoundsException.class);
         thrown.expectMessage(format(Path.ERR_MESS_PATH_ATOMS_INDEX_OUT_OF_BOUNDS, "begin", path.getPathAtomCount(),
-                0, path.getPathAtomCount() - 1));
+                path.getPathAtomCount() - 1));
         path.getSubpath(path.getPathAtomCount(), path.getPathAtomCount() + 1);
     }
 
@@ -201,7 +201,7 @@ public class PathOperationsTest {
         Path path = new Path("/one/two");
         thrown.expect(PathAtomIndexOutOfBoundsException.class);
         thrown.expectMessage(format(Path.ERR_MESS_PATH_ATOMS_INDEX_OUT_OF_BOUNDS, "begin", -1,
-                0, path.getPathAtomCount() - 1));
+                path.getPathAtomCount() - 1));
         path.getSubpath(-1, 1);
     }
 
@@ -210,7 +210,7 @@ public class PathOperationsTest {
         Path path = new Path("/one/two");
         thrown.expect(PathAtomIndexOutOfBoundsException.class);
         thrown.expectMessage(format(Path.ERR_MESS_PATH_ATOMS_INDEX_OUT_OF_BOUNDS, "end", path.getPathAtomCount() + 1,
-               0, path.getPathAtomCount() - 1));
+                path.getPathAtomCount() - 1));
         path.getSubpath(path.getPathAtomCount() - 1, path.getPathAtomCount() + 1);
     }
 
@@ -218,7 +218,7 @@ public class PathOperationsTest {
     public void givenITryToExtractASubpathWithAnEndIndexLowerThanZero_then_throwAnException() {
         Path path = new Path("/one/two");
         thrown.expect(PathAtomIndexOutOfBoundsException.class);
-        thrown.expectMessage(format(Path.ERR_MESS_PATH_ATOMS_INDEX_OUT_OF_BOUNDS, "end", -1, 0, path.getPathAtomCount() - 1));
+        thrown.expectMessage(format(Path.ERR_MESS_PATH_ATOMS_INDEX_OUT_OF_BOUNDS, "end", -1, path.getPathAtomCount() - 1));
         path.getSubpath(0, -1);
     }
 
