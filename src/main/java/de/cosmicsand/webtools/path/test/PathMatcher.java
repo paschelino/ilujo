@@ -26,22 +26,22 @@ public class PathMatcher extends TypeSafeMatcher<Path> {
     }
 
     @Factory
-    public static <T> Matcher<Path> theIdenticalPathAs(Path expectedPath) {
+    public static PathMatcher theIdenticalPathAs(Path expectedPath) {
         return new PathMatcher(expectedPath);
     }
 
     @Factory
-    public static <T> Matcher<Path> theIdenticalPathAs(String expectedPath) {
+    public static PathMatcher theIdenticalPathAs(String expectedPath) {
         return new PathMatcher(new Path(expectedPath));
     }
 
     @Factory
-    public static <T> Matcher<Path> theIdenticalPathAs(Matcher<Path> pathMatcher) {
+    public static PathMatcher theIdenticalPathAs(PathMatcher pathMatcher) {
         return pathMatcher;
     }
 
     @Factory
-    public static <T> Matcher<Path> root() {
+    public static PathMatcher root() {
         return new PathMatcher(Path.ROOT);
     }
 
