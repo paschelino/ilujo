@@ -41,7 +41,7 @@ public class Path implements Comparable<Path> {
     }
 
     private String buildRawPath(PathAtom... pathAtoms) {
-        return buildRawPath(Arrays.asList(pathAtoms));
+        return buildRawPath(asList(pathAtoms));
     }
 
     private String buildRawPath(Collection<PathAtom> pathAtoms) {
@@ -187,35 +187,44 @@ public class Path implements Comparable<Path> {
     }
 
     private void checkIndexBounds(Integer beginIndex, Integer endIndex) {
-        if (beginIndex < 0 || beginIndex >= getPathAtomCount())
-            throw new PathAtomIndexOutOfBoundsException(format(ERR_MESS_PATH_ATOMS_INDEX_OUT_OF_BOUNDS, "begin",
-                    beginIndex, (this.getPathAtomCount() - 1)));
+        if (beginIndex < 0 || beginIndex >= getPathAtomCount()) {
+            throwIndexError(beginIndex, "begin", this.getPathAtomCount() - 1);
+        }
         if (endIndex < 0 || endIndex > getPathAtomCount())
-            throw new PathAtomIndexOutOfBoundsException(format(ERR_MESS_PATH_ATOMS_INDEX_OUT_OF_BOUNDS, "end",
-                    endIndex, this.getPathAtomCount()));
+            throwIndexError(endIndex, "end", this.getPathAtomCount());
+    }
+
+    private void throwIndexError(Integer index, String errorType, int elementCount) {
+        throw new PathAtomIndexOutOfBoundsException(format(ERR_MESS_PATH_ATOMS_INDEX_OUT_OF_BOUNDS, errorType,
+                index, elementCount));
     }
 
     private Path buildSubpath(Integer beginIndex, Integer endIndex) {
         if (beginIndex.equals(endIndex))
             return ROOT;
-        ArrayList<PathAtom> subpath = new ArrayList<PathAtom>();
+        ArrayList<PathAtom> subpath = new ArrayList<>();
         for (int indexCursor = beginIndex; indexCursor < endIndex; indexCursor++)
             subpath.add(this.getAtoms().get(indexCursor));
-        return new Path(subpath.toArray(new PathAtom[] {}));
+        return new Path(subpath);
     }
 
     public Path remove(Path path) {
         if (this.contains(path) && !this.equals(path) && !ROOT.equals(path)) {
             int beginIndex = this.indexOf(path.getAtoms().get(0));
             int endIndex = beginIndex + path.getPathAtomCount();
-            ArrayList<PathAtom> newPath = new ArrayList<PathAtom>();
-            for (int i = 0; i < beginIndex; i++)
-                newPath.add(this.getAtoms().get(i));
-            for (int i = endIndex; i < this.getPathAtomCount(); i++)
-                newPath.add(this.getAtoms().get(i));
-            return new Path(newPath.toArray(new PathAtom[] {}));
+            return removeBetweenIndexes(beginIndex, endIndex);
         }
         return this;
+    }
+
+    private Path removeBetweenIndexes(int beginIndex, int endIndex) {
+        ArrayList<PathAtom> newPath = new ArrayList<>();
+        int index;
+        for (index = 0; index < beginIndex; index++)
+            newPath.add(this.getAtoms().get(index));
+        for (index = endIndex; index < this.getPathAtomCount(); index++)
+            newPath.add(this.getAtoms().get(index));
+        return new Path(newPath);
     }
 
 }
