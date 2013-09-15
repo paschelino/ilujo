@@ -16,7 +16,7 @@ public class Path implements Comparable<Path> {
 
     public static final Path ROOT = new Path();
 
-    private static final String ERR_MESS_SYNTAX_PATTERN = "If not empty the given path is required to follow the pattern '/your/path'. Current value: '%s'";
+    private static final String ERR_MESS_SYNTAX_TEMPLATE = "If not empty the given path is required to follow the pattern '/your/path'. Current value: '%s'";
 
     private final String rawPath;
 
@@ -25,7 +25,7 @@ public class Path implements Comparable<Path> {
     public Path(String rawPath) {
         this.rawPath = isEmpty(rawPath) ? "/" : rawPath;
         if (!SYNTAX_PATTERN.matcher(this.rawPath).matches())
-            throw new URLPathException(format(ERR_MESS_SYNTAX_PATTERN, rawPath));
+            throw new URLPathException(format(ERR_MESS_SYNTAX_TEMPLATE, rawPath));
     }
 
     public Path() {
