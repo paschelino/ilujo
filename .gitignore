@@ -7,4 +7,7 @@
 .settings
 *.class
 *~
+.idea
+.idea/*
+ilujo.iml
 
