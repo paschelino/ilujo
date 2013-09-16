@@ -158,15 +158,18 @@ public class Path implements Comparable<Path> {
 
     private Boolean checkContainmentForNotNullPath(List<PathAtom> othersAtoms, Integer othersFirstAtomIndex) {
         Boolean contained = isProbablyInside(othersAtoms, othersFirstAtomIndex);
-        for (int thisIndex = othersFirstAtomIndex + 1, othersIndex = 1; contained && thisIndex < this.getAtoms().size()
-                && othersIndex < othersAtoms.size(); thisIndex++, othersIndex++)
+        for (
+                int thisIndex = othersFirstAtomIndex + 1, othersIndex = 1;
+                contained && thisIndex < this.getAtoms().size() && othersIndex < othersAtoms.size();
+                thisIndex++, othersIndex++
+            )
             contained = this.getAtoms().get(thisIndex).equals(othersAtoms.get(othersIndex));
         return contained;
     }
 
     private Boolean isProbablyInside(List<PathAtom> othersAtoms, Integer othersFirstAtomIndex) {
-        return !(othersFirstAtomIndex.equals(valueOf(-1)) || (this.getAtoms().size() - othersFirstAtomIndex < othersAtoms
-                .size()));
+        return !(othersFirstAtomIndex.equals(valueOf(-1))
+                || (this.getAtoms().size() - othersFirstAtomIndex < othersAtoms.size()));
     }
 
     public Boolean containsAtom(PathAtom pathAtom) {
@@ -212,12 +215,12 @@ public class Path implements Comparable<Path> {
         if (this.contains(path) && !this.equals(path) && !ROOT.equals(path)) {
             int beginIndex = this.indexOf(path.getAtoms().get(0));
             int endIndex = beginIndex + path.getPathAtomCount();
-            return removeBetweenIndexes(beginIndex, endIndex);
+            return pathFromAtomsAroundIndexes(beginIndex, endIndex);
         }
         return this;
     }
 
-    private Path removeBetweenIndexes(int beginIndex, int endIndex) {
+    private Path pathFromAtomsAroundIndexes(int beginIndex, int endIndex) {
         ArrayList<PathAtom> newPath = new ArrayList<>();
         int index;
         for (index = 0; index < beginIndex; index++)
