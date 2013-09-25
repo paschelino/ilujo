@@ -132,8 +132,9 @@ public class Path implements Comparable<Path> {
             return;
         if (dirtyPathBuilder.charAt(1) == '/')
             deleteCharAt(dirtyPathBuilder, 0);
-        if (dirtyPathBuilder.charAt(dirtyPathBuilder.length() - 1) == '/')
-            deleteCharAt(dirtyPathBuilder, dirtyPathBuilder.length() - 1);
+        int lastCharIndex = dirtyPathBuilder.length() - 1;
+        if (dirtyPathBuilder.charAt(lastCharIndex) == '/')
+            deleteCharAt(dirtyPathBuilder, lastCharIndex);
     }
 
     private void deleteCharAt(StringBuilder dirtyPathBuilder, int charPosition) {
