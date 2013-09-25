@@ -119,8 +119,8 @@ public class Path implements Comparable<Path> {
         return add(new Path(rawPath));
     }
 
-    public Path add(PathAtom... three) {
-        return add(new Path(three));
+    public Path add(PathAtom... pathAtoms) {
+        return add(new Path(pathAtoms));
     }
 
     public Path add(Collection<PathAtom> pathAtoms) {
