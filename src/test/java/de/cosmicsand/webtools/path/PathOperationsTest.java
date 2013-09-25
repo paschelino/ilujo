@@ -98,7 +98,6 @@ public class PathOperationsTest {
     }
 
     @Test
-    @Ignore
     public void ifITryToRemoveAPartNotContained_then_theResultPathIsTheSame() {
         assertThat(new Path("/one").remove(new Path("/other")), is(theIdenticalPathAs("/one")));
     }
