@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
 
 public class Path implements Comparable<Path> {
 
-    // needs to be defined before the very first constructor invocation
+    // needs to be declared and initialized before the very first constructor invocation; see Path#ROOT
     static final Pattern SYNTAX_PATTERN = compile("(/[^/]*)*");
 
-    public static final Path ROOT = new Path();
+    public static final Path ROOT = new Path(); // very first constructor invocation; see Path#SYNTAX_PATTERN
 
     private static final String ERR_MESS_SYNTAX_TEMPLATE = "If not empty the given path is required to follow the pattern '/your/path'. Current value: '%s'";
 
