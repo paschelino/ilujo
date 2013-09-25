@@ -9,32 +9,18 @@ import static org.junit.Assert.assertThat;
 
 import java.util.Collections;
 
+import de.bechte.junit.runners.context.HierarchicalContextRunner;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 
+//@RunWith(HierarchicalContextRunner.class)
 public class PathOperationsTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-
-    @Test
-    public void whenCreatedWithEmptyConstructorInformation_then_itTransformsToRoot() {
-        assertThat(new Path().toString(), is("/"));
-        assertThat(new Path((String) null).toString(), is("/"));
-        assertThat(new Path("").toString(), is("/"));
-    }
-
-    @Test
-    public void itProvidesARootPathObject() {
-        assertThat(Path.ROOT, is(new Path()));
-    }
-
-    @Test
-    public void whenItIsTheRoot_then_thereAreNoPathAtoms() {
-        assertThat(new Path().getAtoms(), is(Collections.<PathAtom> emptyList()));
-    }
 
     @Test
     public void givenIAddTwoNullPaths_then_itGivesANullPath() {

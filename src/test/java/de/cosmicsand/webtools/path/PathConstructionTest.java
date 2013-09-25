@@ -22,6 +22,23 @@ public class PathConstructionTest {
     private static final String WRONG_PATH_START_WITH_RANDOM = "wrongpathstartwithrandompart" + random();
 
     @Test
+    public void whenCreatedWithEmptyConstructorInformation_then_itTransformsToRoot() {
+        assertThat(new Path().toString(), is("/"));
+        assertThat(new Path((String) null).toString(), is("/"));
+        assertThat(new Path("").toString(), is("/"));
+    }
+
+    @Test
+    public void itProvidesARootPathObject() {
+        assertThat(Path.ROOT, is(new Path()));
+    }
+
+    @Test
+    public void whenItIsTheRoot_then_thereAreNoPathAtoms() {
+        assertThat(new Path().getAtoms(), is(Collections.<PathAtom> emptyList()));
+    }
+
+    @Test
     public void whenCreatedWithASlash_then_itTransformsToASlash() {
         assertThat(new Path("/").toString(), is("/"));
     }
