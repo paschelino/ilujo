@@ -104,11 +104,27 @@ public class Path implements Comparable<Path> {
         atoms = Collections.unmodifiableList(atomsHelper);
     }
 
-    public Path add(Path path) {
+    public Path add(Path... paths) {
+        if(paths == null)
+            return new Path(this);
         StringBuilder resultPathBuilder = new StringBuilder(this.rawPath);
-        resultPathBuilder.append(new Path(path).rawPath);
-        cleanupObsoleteSlashes(resultPathBuilder);
+        for(Path path: paths){
+            resultPathBuilder.append(new Path(path).rawPath);
+            cleanupObsoleteSlashes(resultPathBuilder);
+        }
         return new Path(resultPathBuilder.toString());
+    }
+
+    public Path add(String rawPath) {
+        return add(new Path(rawPath));
+    }
+
+    public Path add(PathAtom... three) {
+        return add(new Path(three));
+    }
+
+    public Path add(Collection<PathAtom> pathAtoms) {
+        return add(new Path(pathAtoms));
     }
 
     private void cleanupObsoleteSlashes(StringBuilder dirtyPathBuilder) {
