@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public class Path implements Comparable<Path> {
 
     // needs to be defined before the very first constructor invocation
-    protected static final Pattern SYNTAX_PATTERN = compile("(/[^/]*)*");
+    static final Pattern SYNTAX_PATTERN = compile("(/[^/]*)*");
 
     public static final Path ROOT = new Path();
 
@@ -23,7 +23,7 @@ public class Path implements Comparable<Path> {
 
     private List<PathAtom> atoms;
 
-    protected static final String ERR_MESS_PATH_ATOMS_INDEX_OUT_OF_BOUNDS = "The requested path atom %s index %s exceeds the atom list's index boundaries (min 0, max %s).";
+    static final String ERR_MESS_PATH_ATOMS_INDEX_OUT_OF_BOUNDS = "The requested path atom %s index %s exceeds the atom list's index boundaries (min 0, max %s).";
 
     public Path(String rawPath) {
         this.rawPath = isEmpty(rawPath) ? "/" : rawPath;
@@ -97,7 +97,7 @@ public class Path implements Comparable<Path> {
     }
 
     private void extractAtoms() {
-        List<PathAtom> atomsHelper = new ArrayList<PathAtom>();
+        List<PathAtom> atomsHelper = new ArrayList<>();
         String[] split = rawPath.substring(1).split("/");
         for (String rawAtom : split)
             atomsHelper.add(atomsHelper.size(), new PathAtom(rawAtom));
@@ -150,8 +150,6 @@ public class Path implements Comparable<Path> {
     public Path intersection(Path otherPath) {
         if (ROOT.equals(otherPath))
             return ROOT;
-        if (this.equals(otherPath))
-            return this;
         if (!this.equals(otherPath))
             return buildIntersection(otherPath);
         return this;
@@ -206,9 +204,8 @@ public class Path implements Comparable<Path> {
     }
 
     private void checkIndexBounds(Integer beginIndex, Integer endIndex) {
-        if (beginIndex < 0 || beginIndex >= getPathAtomCount()) {
+        if (beginIndex < 0 || beginIndex >= getPathAtomCount())
             throwIndexError(beginIndex, "begin");
-        }
         if (endIndex < 0 || endIndex > getPathAtomCount())
             throwIndexError(endIndex, "end");
     }
