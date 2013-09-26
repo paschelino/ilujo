@@ -18,12 +18,13 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
-//@RunWith(HierarchicalContextRunner.class)
+@RunWith(HierarchicalContextRunner.class)
 public class PathOperationsTest {
 
     public static final Path PATH_ONE_TWO = new Path("/one/two");
     public static final String ONE_TWO_THREE_FOUR = "/one/two/three/four";
     public static final String ONE_TWO_THREE = "/one/two/three";
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -91,6 +92,10 @@ public class PathOperationsTest {
     public void givenAPathATomIsContainedSomewhereInThePath_then_returnItsPosition() {
         assertThat(new Path(ONE_TWO_THREE).indexOf(new PathAtom("two")), is(1));
     }
+
+    // indexOf(Path) ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // indexOf(String) /////////////////////////////////////////////////////////////////////////////////////////////////
 
     // intersection ////////////////////////////////////////////////////////////////////////////////////////////////////
     @Test
