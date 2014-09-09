@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.7
 version = '0.0.2-SNAPSHOT'
@@ -20,7 +21,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile group: 'junit', name: 'junit', version: '3.8.1'
     testCompile group: 'junit-addons', name: 'junit-addons', version: '1.4'
-    testCompile group: 'de.bechte.junit', name: 'junit-hierarchicalcontextrunner', version: '4.12-SNAPSHOT'
+    testCompile group: 'de.bechte.junit', name: 'junit-hierarchicalcontextrunner', version: '4.11.3'
     compile group: 'commons-lang', name: 'commons-lang', version: '1.0'
 }
 
@@ -33,5 +34,17 @@ uploadArchives {
        flatDir {
            dirs 'repos'
        }
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'info.cosmicsand'
+            artifactId 'ilijo'
+            version version
+
+            from components.java
+        }
     }
 }
