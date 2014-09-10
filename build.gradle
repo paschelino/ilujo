@@ -3,7 +3,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.7
-version = '0.0.2-SNAPSHOT'
+version = '0.0.2'
 jar {
     manifest {
         attributes 'Implementation-Title': 'ilujo', 'Implementation-Version': version
@@ -25,10 +25,6 @@ dependencies {
     compile group: 'commons-lang', name: 'commons-lang', version: '1.0'
 }
 
-test {
-    systemProperties 'property': 'value'
-}
-
 uploadArchives {
     repositories {
        flatDir {
@@ -41,7 +37,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId 'info.cosmicsand'
-            artifactId 'ilijo'
+            artifactId 'ilujo'
             version version
 
             from components.java
